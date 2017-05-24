@@ -10,6 +10,9 @@ import warnings
 # Default, non-existent, currency
 DEFAULT_CURRENCY_CODE = 'XYZ'
 
+# Default number of decimal places
+DECIMAL_PLACES = 2
+
 PYTHON2 = sys.version_info[0] == 2
 
 
@@ -28,13 +31,15 @@ class Currency(object):
     canonical name, and countries the currency is used in.
     """
 
-    def __init__(self, code='', numeric='999', name='', countries=None):
+    def __init__(self, code='', numeric='999', name='', countries=None,
+                 decimal_places=None):
         if countries is None:
             countries = []
         self.code = code
         self.countries = countries
         self.name = name
         self.numeric = numeric
+        self.decimal_places = decimal_places if decimal_places else DECIMAL_PLACES
 
     def __hash__(self):
         return hash(self.code)
@@ -233,13 +238,14 @@ CURRENCIES = {}
 CURRENCIES_BY_ISO = {}
 
 
-def add_currency(code, numeric, name, countries):
+def add_currency(code, numeric, name, countries, decimal_places=None):
     global CURRENCIES
     CURRENCIES[code] = Currency(
         code=code,
         numeric=numeric,
         name=name,
-        countries=countries)
+        countries=countries,
+        decimal_places=decimal_places)
     CURRENCIES_BY_ISO[numeric] = CURRENCIES[code]
     return CURRENCIES[code]
 
